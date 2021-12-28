@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: block-account-service
+spec:
+  selector:
+    app: block-account-service
+  type: NodePort
+  ports:
+    - name: http
+      port: 8081
+      nodePort: 30001
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: block-account-service
+spec:
+  selector:
+    matchLabels:
+      app: block-account-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: block-account-service
+    spec:
+      containers:
+        - name: server
+          image: danbond02/block-account-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8081
+
+---
